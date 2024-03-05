@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { usePersons, useNewName, useNewNumber, useSearch } from "./hooks";
 import { personsToShow } from "./helpers/personsToShow";
 
