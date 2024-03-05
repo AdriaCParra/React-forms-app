@@ -1,17 +1,13 @@
 import { useState } from "react";
-import "./hooks";
+import { usePersons, useNewName, useNewNumber, useSearch } from "./hooks";
+import { personsToShow } from "./helpers/personsToShow";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
-  const [filteredPersons, setFilteredPersons] = useState([]);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-  const [search, setSearch] = useState("");
+  const { persons, filteredPersons, setFilteredPersons, setPersons } =
+    usePersons();
+  const { newName, setNewName } = useNewName();
+  const { newNumber, setNewNumber } = useNewNumber();
+  const { search, setSearch } = useSearch();
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -26,12 +22,12 @@ const App = () => {
     setSearch(searchValue);
 
     const filteredPersons = persons.filter((person) =>
-      person.name.includes(search)
+      person.name.includes(searchValue)
     );
 
     setFilteredPersons(filteredPersons);
 
-    if (search === "") setFilteredPersons([]);
+    if (searchValue === "") setFilteredPersons([]);
   };
 
   const handleSubmit = (event) => {
@@ -42,7 +38,7 @@ const App = () => {
     else setPersons([...persons, { name: newName, number: newNumber }]);
   };
 
-  const personsToShow = filteredPersons.length > 0 ? filteredPersons : persons;
+  const personArrayToShow = personsToShow(persons, filteredPersons);
 
   return (
     <div>
@@ -60,7 +56,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {personsToShow.map((person) => (
+        {personArrayToShow.map((person) => (
           <li key={person.name}>{`${person.name} || ${person.number}`}</li>
         ))}
       </ul>
